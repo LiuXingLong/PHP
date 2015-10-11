@@ -104,4 +104,7 @@ $stmt->execute();
 
 $stmt->close();
 $conn->close();
+
+// $result = $stmt_fetch_array();  查询中获取结果集
+
 ?>
