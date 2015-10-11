@@ -1,0 +1,147 @@
+<?php 
+//   每个  php 文件都能独立运行
+//   在线运行的链接    http://www.mcqyy.com/RunCode/php5.6/
+//   如设置以   html方式显示   会浏览显示一样 
+?>
+
+<?php
+$url="";
+$ch=curl_init();
+curl_setopt($ch,CURLOPT_URL,$url);
+curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+$result=curl_exec($ch);
+echo $result;
+?>
+
+
+
+<?php
+$url="";
+$ch=curl_init();
+curl_setopt($ch,CURLOPT_URL,$url);
+curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+curl_setopt($ch,CURLOPT_HEADER,1); //  输出头信息
+$result=curl_exec($ch);
+echo $result;
+?>
+
+
+<?php
+$url="";
+$ch=curl_init();
+curl_setopt($ch,CURLOPT_URL,$url);
+curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+$options=array(
+	'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',	
+	'Accept-Encoding:gzip,deflate,sdch',			
+	'User-Agent:Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',	
+);
+curl_setopt($ch,CURLOPT_HTTPHEADER,$options); // 添加头信息    模拟浏览器
+curl_setopt($ch,CURLOPT_HEADER,1);
+$result=curl_exec($ch);
+echo $result;
+?>
+
+
+
+
+
+<?php
+$url="";
+$ch=curl_init();
+curl_setopt($ch,CURLOPT_URL,$url);
+curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+$options=array(
+		'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+		'Accept-Encoding:gzip,deflate,sdch',
+		'User-Agent:Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',		
+);
+curl_setopt($ch,CURLOPT_HTTPHEADER,$options);
+curl_setopt($ch,CURLOPT_HEADER,1);
+
+// 设置代理  IP
+curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC); //代理认证模式
+curl_setopt($ch, CURLOPT_PROXY, $ip); //代理服务器地址
+curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP); //使用http代理模式
+
+$result=curl_exec($ch);
+echo $result;
+?>
+
+
+
+
+
+
+
+<?php
+$url="";
+$ch=curl_init();
+curl_setopt($ch,CURLOPT_URL,$url);
+curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+$options=array(
+		'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+		'Accept-Encoding:gzip,deflate,sdch',
+		'User-Agent:Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',		
+);
+curl_setopt($ch,CURLOPT_HTTPHEADER,$options);
+curl_setopt($ch,CURLOPT_HEADER,1);
+
+// 设置代理  IP
+curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC); //代理认证模式
+curl_setopt($ch, CURLOPT_PROXY, $ip); //代理服务器地址
+curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP); //使用http代理模式
+
+// post
+$postData="";
+curl_setopt($ch,CURLOPT_POST,1);
+curl_setopt($ch,CURLOPT_POSTFIELDS,$postData);
+
+$result=curl_exec($ch);
+//json 转  数组
+// $result=json_decode($result,true);
+// var_dump($result);
+
+echo $result;
+?>
+
+
+
+
+<?php
+$url="";
+$ch=curl_init();
+curl_setopt($ch,CURLOPT_URL,$url);
+curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+$options=array(
+		'Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+		'Accept-Encoding:gzip,deflate,sdch',
+		'User-Agent:Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.63 Safari/537.36',	
+);
+curl_setopt($ch,CURLOPT_HTTPHEADER,$options);
+curl_setopt($ch,CURLOPT_HEADER,1);
+
+// 设置代理  IP
+curl_setopt($ch, CURLOPT_PROXYAUTH, CURLAUTH_BASIC); //代理认证模式
+curl_setopt($ch, CURLOPT_PROXY, $ip); //代理服务器地址
+curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP); //使用http代理模式
+
+// post
+$postData="";
+curl_setopt($ch,CURLOPT_POST,1);
+curl_setopt($ch,CURLOPT_POSTFIELDS,$postData);
+
+
+$result=curl_exec($ch);
+echo $result;
+
+// 提取  cookie
+$pattern='/Set-Cookie: .*;/';
+preg_match_all($pattern,$result,$cookie);
+$cookie=substr($cookie[0][0],12,36);
+var_dump($cookie);
+
+// 插入 cookie
+curl_setopt($ch,CURLOPT_COOKIE,$cookie);
+
+?>
