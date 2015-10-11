@@ -5,7 +5,14 @@ $username = "";
 $password = "";
 $dbname = "";
 
-$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    echo "Connected successfully"; 
+    }
+catch(PDOException $e)
+    {
+    echo $e->getMessage();
+    }
 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 //查询
@@ -19,3 +26,4 @@ if ($stmt->execute(array($GET['flag']))){
 //插入
 $sql = "INSERT INTO ip (ip, flag) VALUES ('{$out[0][$i]}','0')";
 $conn->exec($sql);
+$conn = null;
