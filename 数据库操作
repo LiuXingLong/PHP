@@ -1,20 +1,26 @@
 /*  PDO  */
+
 <?php
-$servername = "127.0.0.1";
-$username = "";
-$password = "";
-$dbname = "";
+$dbms='mysql';     //数据库类型
+$host='localhost'; //数据库主机名
+$dbName='test';    //使用的数据库
+$user='root';      //数据库连接用户名
+$pass='';          //对应的密码
+$dsn="$dbms:host=$host;dbname=$dbName";
 
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    echo "Connected successfully"; 
-    }
-catch(PDOException $e)
-    {
-    echo $e->getMessage();
-    }
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conn = new PDO($dsn, $user, $pass); //初始化一个PDO对象
+    echo "连接成功<br/>";
+    $conn = null;
+} catch (PDOException $e) {
+    die ("Error!: " . $e->getMessage() . "<br/>");
+}
+//  默认这个不是长连接，如果需要数据库长连接，需要最后加一个参数：array(PDO::ATTR_PERSISTENT => true) 变成这样：
+$conn = new PDO($dsn, $user, $pass, array(PDO::ATTR_PERSISTENT => true));
 
+?>
+
+<?php
 //使用预处理语句查询数据
 $GET[flag]=0;
 $stmt = $conn->prepare("SELECT username,card FROM idcard where flag = ?");
@@ -22,8 +28,9 @@ if ($stmt->execute(array($GET['flag']))){
 	$row = $stmt->fetchAll();
 	$cnt=count($row);
 }
+?>
 
-
+<?php
 //用预处理语句进行重复插入    通过用 name 和 value 取代 ? 占位符的位置来执行一条插入查询
 $stmt = $conn->prepare("INSERT INTO REGISTRY (name, value) VALUES (?, ?)");
 $stmt->bindParam(1, $name);
@@ -38,9 +45,9 @@ $stmt->execute();
 $name = 'two';
 $value = 2;
 $stmt->execute();
+?>
 
-
-
+<?php
 //用预处理语句进行重复插入   通过用 name 和 value 替代相应的命名占位符来执行一个插入查询
 $stmt = $dbh->prepare("INSERT INTO REGISTRY (name, value) VALUES (:name, :value)");
 $stmt->bindParam(':name', $name);
