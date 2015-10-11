@@ -1,0 +1,21 @@
+/*  PDO  */
+
+$servername = "127.0.0.1";
+$username = "";
+$password = "";
+$dbname = "";
+
+$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+//查询
+$GET[flag]=0;
+$stmt = $conn->prepare("SELECT username,card FROM idcard where flag = ?");
+if ($stmt->execute(array($GET['flag']))){
+	$row = $stmt->fetchAll();
+	$cnt=count($row);
+}
+
+//插入
+$sql = "INSERT INTO ip (ip, flag) VALUES ('{$out[0][$i]}','0')";
+$conn->exec($sql);
