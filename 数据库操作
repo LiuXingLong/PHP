@@ -1,5 +1,5 @@
 /*  PDO  */
-
+<?php
 $servername = "127.0.0.1";
 $username = "";
 $password = "";
@@ -15,7 +15,7 @@ catch(PDOException $e)
     }
 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-//查询
+//使用预处理语句查询数据
 $GET[flag]=0;
 $stmt = $conn->prepare("SELECT username,card FROM idcard where flag = ?");
 if ($stmt->execute(array($GET['flag']))){
@@ -23,7 +23,84 @@ if ($stmt->execute(array($GET['flag']))){
 	$cnt=count($row);
 }
 
-//插入
-$sql = "INSERT INTO ip (ip, flag) VALUES ('{$out[0][$i]}','0')";
-$conn->exec($sql);
+
+//用预处理语句进行重复插入    通过用 name 和 value 取代 ? 占位符的位置来执行一条插入查询
+$stmt = $conn->prepare("INSERT INTO REGISTRY (name, value) VALUES (?, ?)");
+$stmt->bindParam(1, $name);
+$stmt->bindParam(2, $value);
+
+// 插入一行
+$name = 'one';
+$value = 1;
+$stmt->execute();
+
+// 用不同的值插入另一行
+$name = 'two';
+$value = 2;
+$stmt->execute();
+
+
+
+//用预处理语句进行重复插入   通过用 name 和 value 替代相应的命名占位符来执行一个插入查询
+$stmt = $dbh->prepare("INSERT INTO REGISTRY (name, value) VALUES (:name, :value)");
+$stmt->bindParam(':name', $name);
+$stmt->bindParam(':value', $value);
+
+// 插入一行
+$name = 'one';
+$value = 1;
+$stmt->execute();
+
+//  用不同的值插入另一行
+$name = 'two';
+$value = 2;
+$stmt->execute();
+
+$stmt = null;
 $conn = null;
+?>
+
+
+
+
+
+// mysqli预处理 
+<?php
+$servername = "localhost";
+$username = "username";
+$password = "password";
+$dbname = "myDB";
+
+// 创建连接
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// 检测连接
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// prepare and bind
+$stmt = $conn->prepare("INSERT INTO MyGuests (firstname, lastname, email) VALUES(?, ?, ?)");
+$stmt->bind_param("sss", $firstname, $lastname, $email);
+
+// 设置参数并执行
+$firstname = "John";
+$lastname = "Doe";
+$email = "john@example.com";
+$stmt->execute();
+
+$firstname = "Mary";
+$lastname = "Moe";
+$email = "mary@example.com";
+$stmt->execute();
+
+$firstname = "Julie";
+$lastname = "Dooley";
+$email = "julie@example.com";
+$stmt->execute();
+
+echo "New records created successfully";
+
+$stmt->close();
+$conn->close();
+?>
