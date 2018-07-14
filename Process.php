@@ -56,22 +56,22 @@ while(true){
 		// 所有子进程都执行完任务,重新给所有子进程分配任务
 		if($workProgressCount == 0){
 		    foreach($childList as $child_pid => $val){          
-				//$childList[$child_pid] = true;
-				$workProgressCount++;  //添加工作的进程数
-				posix_kill($child_pid, SIGUSR1); // 向 $child_pid 进程发送 SIGUSR1					
-                sleep(1); 				
+			//$childList[$child_pid] = true;
+			$workProgressCount++;  //添加工作的进程数
+			posix_kill($child_pid, SIGUSR1); // 向 $child_pid 进程发送 SIGUSR1					
+			sleep(1); 				
 		    }          
 		} 
 	}	
-    // 接收子进程执行完任务消息,更新工作进程    
+	// 接收子进程执行完任务消息,更新工作进程    
 	pcntl_signal_dispatch(); // 接收子进程任务完成信号	
-    // 保持恒定子进程数
-    $childPid = pcntl_wait($status,WNOHANG);
-    if ($childPid > 0){
-        echo $childPid." 子进程退出\n";
-        unset($childList[$childPid]);
-        $count--;
-    }
+	// 保持恒定子进程数
+	$childPid = pcntl_wait($status,WNOHANG);
+	if ($childPid > 0){
+		echo $childPid." 子进程退出\n";
+		unset($childList[$childPid]);
+		$count--;
+	}
 	echo '当前执行任务进程数: '.$workProgressCount."\n"; 
 	sleep(1);  
 }
